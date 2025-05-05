@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>LOCATIONS</h2>
+    <a href="/add_location" class="btn btn-success mb-3">Add New Location</a>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for location in locations %}
+            <tr>
+                <td>{{ location[0] }}</td>
+                <td>{{ location[1] }}</td>
+                <td>{{ location[2] or '' }}</td>
+                <td>
+                    <a href="#" class="btn btn-primary btn-sm">Edit</a>
+                    <td>
+                        <a href="/delete_location/{{ location[0] }}" class="btn btn-danger btn-sm" 
+                           onclick="return confirm('Are you sure?')">Delete</a>
+                    </td>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="/" class="btn btn-secondary">Back to Products</a>
+{% endblock %}

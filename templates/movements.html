@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>PRODUCT MOVEMENTS</h2>
+    <a href="/add_movement" class="btn btn-success mb-3">Add New Movement</a>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Movement ID</th>
+                <th>Timestamp</th>
+                <th>Product</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Qty</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for movement in movements %}
+            <tr>
+                <td>{{ movement[0] }}</td>
+                <td>{{ movement[1] }}</td>
+                <td>{{ movement[2] }}</td>
+                <td>{{ movement[3] or 'N/A' }}</td>
+                <td>{{ movement[4] or 'N/A' }}</td>
+                <td>{{ movement[5] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="/" class="btn btn-secondary">Back to Products</a>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Move Product{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Move Product Between Locations</h2>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <form method="POST" class="col-md-6">
+        <div class="mb-3">
+            <label class="form-label">Product</label>
+            <select name="product_id" class="form-select" required>
+                <option value="">-- Select Product --</option>
+                {% for product in products %}
+                <option value="{{ product[0] }}">{{ product[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">From Location (leave empty if adding new stock)</label>
+            <select name="from_location" class="form-select">
+                <option value="">-- Select Source Location --</option>
+                {% for location in locations %}
+                <option value="{{ location[0] }}">{{ location[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">To Location (leave empty if removing stock)</label>
+            <select name="to_location" class="form-select">
+                <option value="">-- Select Destination Location --</option>
+                {% for location in locations %}
+                <option value="{{ location[0] }}">{{ location[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Quantity</label>
+            <input type="number" name="qty" class="form-control" min="1" required>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Move Product</button>
+        <a href="{{ url_for('movements') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

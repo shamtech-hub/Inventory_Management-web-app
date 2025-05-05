@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Inventory Report{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Inventory Report</h2>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Product</th>
+                <th>Location</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for balance in balances %}
+            <tr>
+                <td>{{ balance[1] }}</td>
+                <td>{{ balance[3] }}</td>
+                <td>{{ balance[4] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <h3 class="mt-5">Movement History</h3>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Date/Time</th>
+                <th>Product</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Qty</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for movement in movements %}
+            <tr>
+                <td>{{ movement[1] }}</td>
+                <td>{{ movement[2] }}</td>
+                <td>{{ movement[3] or 'N/A' }}</td>
+                <td>{{ movement[4] or 'N/A' }}</td>
+                <td>{{ movement[5] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
