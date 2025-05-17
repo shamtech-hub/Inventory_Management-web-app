@@ -6,18 +6,18 @@ import os
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
-app.secret_key = "development-key"  # Set a secret key for session management
+app.secret_key = "development-key" 
 
 
 @app.route("/")
 def home():
     try:
         products = db.get_all_products()
-        print(f"DEBUG: Products to display: {products}")  # Debug output
+        print(f"DEBUG: Products to display: {products}")  
         return render_template("index.html", products=products)
     except Exception as e:
         print(f"ERROR: {e}")
-        return render_template("index.html", products=[])  # Key variable name
+        return render_template("index.html", products=[])  
 
 @app.route("/add", methods=["GET", "POST"])
 def add():
@@ -32,9 +32,9 @@ def add():
         return redirect(url_for("home"))
     return render_template("add.html")
 
-@app.route("/delete/<string:product_id>")  # Changed from int:pd_id to string:product_id
+@app.route("/delete/<string:product_id>") 
 def delete(product_id):
-    db.delete_product(product_id)  # Changed from delete_pd()
+    db.delete_product(product_id) 
     return redirect(url_for("home"))
 
 @app.route("/locations")
@@ -56,7 +56,7 @@ def add_location():
 @app.route("/movements")
 def movements():
     movements = db.get_all_movements()
-    products = db.get_all_products()  # Changed from get_all_pd()
+    products = db.get_all_products()  
     locations = db.get_all_locations()
     return render_template("movements.html", 
                          movements=movements,
@@ -75,7 +75,7 @@ def add_movement():
         db.add_movement(movement_id, product_id, qty, from_location, to_location)
         return redirect(url_for("movements"))
     
-    products = db.get_all_products()  # Changed from get_all_pd()
+    products = db.get_all_products() 
     locations = db.get_all_locations()
     return render_template("add_movement.html", 
                          products=products,
@@ -83,7 +83,7 @@ def add_movement():
 
 @app.route("/report")
 def report():
-    balances = db.get_product_balances()  # Changed from get_product_balance()
+    balances = db.get_product_balances()  
     return render_template("report.html", balances=balances)
 
 @app.route("/move_product", methods=["GET", "POST"])
@@ -113,7 +113,7 @@ def move_product():
     return render_template("move_product.html", 
                          products=products,
                          locations=locations)
-# Add these routes to your app.py
+
 
 @app.route("/delete_location/<string:location_id>")
 def delete_location(location_id):
