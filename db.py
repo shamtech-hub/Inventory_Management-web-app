@@ -49,17 +49,17 @@ def init_db():
     
     conn.commit()
     conn.close()
-# ========== PRODUCT FUNCTIONS ==========
+
 def get_all_products():
     try:
         conn = MySQLdb.connect(**DB_CONFIG)
         cursor = conn.cursor()
         
-        # Debug: List all tables
+      
         cursor.execute("SHOW TABLES")
         print(f"Tables in DB: {cursor.fetchall()}")  # Verify Product table exists
         
-        # Explicit column selection
+       
         cursor.execute("""
             SELECT product_id, product_name, price, quantity 
             FROM Product
@@ -77,7 +77,7 @@ def get_all_products():
         if conn:
             conn.close()
 def get_product_by_id(product_id):
-    """Get a single product by ID"""
+  
     conn = MySQLdb.connect(**DB_CONFIG)
     cr = conn.cursor()
     cr.execute('SELECT * FROM Product WHERE product_id = %s', (product_id,))
@@ -86,7 +86,7 @@ def get_product_by_id(product_id):
     return product
 
 def add_product(pd_name,quantity,pd_price):
-    """Add a new product with auto-increment ID"""
+  
     conn = MySQLdb.connect(**DB_CONFIG)
     cr = conn.cursor()
     cr.execute('''
@@ -98,7 +98,7 @@ def add_product(pd_name,quantity,pd_price):
     conn.close()
 
 def update_product(product_id, product_name):
-    """Update an existing product"""
+  
     conn = MySQLdb.connect(**DB_CONFIG)
     cr = conn.cursor()
     cr.execute('''
@@ -110,16 +110,16 @@ def update_product(product_id, product_name):
     conn.close()
 
 def delete_product(product_id):
-    """Delete a product from the database"""
+
     conn = MySQLdb.connect(**DB_CONFIG)
     cr = conn.cursor()
     cr.execute('DELETE FROM Product WHERE product_id = %s', (product_id,))
     conn.commit()
     conn.close()
 
-# ========== LOCATION FUNCTIONS ==========
+
 def get_all_locations():
-    """Get all locations from the database"""
+    
     conn = MySQLdb.connect(**DB_CONFIG)
     cr = conn.cursor()
     cr.execute('SELECT * FROM Location')
@@ -128,7 +128,7 @@ def get_all_locations():
     return locations
 
 def get_location_by_id(location_id):
-    """Get a single location by ID"""
+  
     conn = MySQLdb.connect(**DB_CONFIG)
     cr = conn.cursor()
     cr.execute('SELECT * FROM Location WHERE location_id = %s', (location_id,))
@@ -137,7 +137,7 @@ def get_location_by_id(location_id):
     return location
 
 def add_location(location_id, location_name, address=None):
-    """Add a new location to the database"""
+  
     conn = MySQLdb.connect(**DB_CONFIG)
     cr = conn.cursor()
     cr.execute('INSERT INTO Location (location_id, location_name, address) VALUES (%s, %s, %s)', 
@@ -146,7 +146,7 @@ def add_location(location_id, location_name, address=None):
     conn.close()
 
 def update_location(location_id, location_name, address=None):
-    """Update an existing location"""
+    
     conn = MySQLdb.connect(**DB_CONFIG)
     cr = conn.cursor()
     cr.execute('''
@@ -158,16 +158,15 @@ def update_location(location_id, location_name, address=None):
     conn.close()
 
 def delete_location(location_id):
-    """Delete a location from the database"""
+    
     conn = MySQLdb.connect(**DB_CONFIG)
     cr = conn.cursor()
     cr.execute('DELETE FROM Location WHERE location_id = %s', (location_id,))
     conn.commit()
     conn.close()
 
-# ========== PRODUCT MOVEMENT FUNCTIONS ==========
 def get_all_movements():
-    """Get all product movements from the database"""
+   
     conn = MySQLdb.connect(**DB_CONFIG)
     cr = conn.cursor()
     cr.execute('''
@@ -187,7 +186,7 @@ def get_all_movements():
     return movements
 
 def get_movement_by_id(movement_id):
-    """Get a single movement by ID"""
+   
     conn = MySQLdb.connect(**DB_CONFIG)
     cr = conn.cursor()
     cr.execute('''
@@ -207,21 +206,19 @@ def get_movement_by_id(movement_id):
     return movement
 
 def add_movement(movement_id, product_id, qty, from_location=None, to_location=None):
-    """Add a new product movement with validation"""
+ 
     conn = MySQLdb.connect(**DB_CONFIG)
     cr = conn.cursor()
     
-    # Validate locations
+   
     if from_location and to_location and from_location == to_location:
         conn.close()
         raise ValueError("Cannot move to the same location")
     
-    # Validate quantity
     if qty <= 0:
         conn.close()
         raise ValueError("Quantity must be positive")
     
-    # Check source location has enough stock if moving from
     if from_location:
         cr.execute('''
             SELECT COALESCE(SUM(
@@ -239,7 +236,6 @@ def add_movement(movement_id, product_id, qty, from_location=None, to_location=N
             conn.close()
             raise ValueError(f"Not enough stock in source location (available: {balance})")
     
-    # Add the movement
     cr.execute('''
         INSERT INTO ProductMovement 
         (movement_id, product_id, from_location, to_location, qty) 
@@ -250,7 +246,6 @@ def add_movement(movement_id, product_id, qty, from_location=None, to_location=N
     conn.close()
 
 def update_movement(movement_id, product_id, qty, from_location=None, to_location=None):
-    """Update an existing product movement"""
     conn = MySQLdb.connect(**DB_CONFIG)
     cr = conn.cursor()
     cr.execute('''
@@ -262,16 +257,13 @@ def update_movement(movement_id, product_id, qty, from_location=None, to_locatio
     conn.close()
 
 def delete_movement(movement_id):
-    """Delete a product movement from the database"""
     conn = MySQLdb.connect(**DB_CONFIG)
     cr = conn.cursor()
     cr.execute('DELETE FROM ProductMovement WHERE movement_id = %s', (movement_id,))
     conn.commit()
     conn.close()
 
-# ========== REPORT FUNCTIONS ==========
 def get_product_balances():
-    """Get product balances across all locations"""
     conn = MySQLdb.connect(**DB_CONFIG)
     cr = conn.cursor()
     
@@ -302,5 +294,4 @@ def get_product_balances():
     conn.close()
     return balances
 
-# Initialize the database when this module is imported
 init_db()
